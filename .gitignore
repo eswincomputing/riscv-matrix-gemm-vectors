@@ -1,0 +1,9 @@
+# Optional serial build (generator/build.sh with UART_BASE)
+prog_uart.elf
+
+# Temporary files of generator/build.sh
+*.tmp
+
+# Python
+__pycache__/
+*.pyc

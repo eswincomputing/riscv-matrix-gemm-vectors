@@ -1,0 +1,127 @@
+{
+  "id": "001",
+  "name": "full_tile",
+  "title": "Full tile",
+  "purpose": "All of M, N and K at their maximum for one instruction. Exercises every output of the tile. Run this case first; a failure here is fundamental.",
+  "shape": {
+    "M": 128,
+    "N": 128,
+    "K": 32
+  },
+  "tile": {
+    "mtilem": 128,
+    "mtilen": 128,
+    "mtilek": 32,
+    "instructions": 1
+  },
+  "csr": {
+    "mtilem": "0x803",
+    "mtilen": "0x804",
+    "mtilek": "0x805"
+  },
+  "layout": "C = A * B^T; A is [M][K], B is [N][K] (not [K][N]); all row-major",
+  "dtype": {
+    "A": "bf16",
+    "B": "bf16",
+    "C": "fp32"
+  },
+  "stride_bytes": {
+    "A": 64,
+    "B": 64,
+    "C": 512
+  },
+  "data": {
+    "generator": "zero_mean",
+    "seed": "0xA3E00001"
+  },
+  "criterion": {
+    "type": "error-bound",
+    "formula": "|C_hat - C*| <= gamma(G) * sum|a*b|,  gamma(G) = G*u/(1 - G*u),  u = 2^-24",
+    "default_rounds_G": 32,
+    "default_note": "G = K holds for any FP32 accumulation; use the rounding count of your implementation for a tighter check (check.py --rounds/--group)",
+    "self_check_tol": 1.907352270798246e-06
+  },
+  "cancellation_ratio": {
+    "median": 5.58,
+    "max": 99548.4,
+    "top": [
+      {
+        "m": 101,
+        "n": 114,
+        "kappa": 99548.4
+      },
+      {
+        "m": 28,
+        "n": 86,
+        "kappa": 86659.7
+      },
+      {
+        "m": 114,
+        "n": 75,
+        "kappa": 59644.4
+      },
+      {
+        "m": 23,
+        "n": 92,
+        "kappa": 27832.2
+      },
+      {
+        "m": 60,
+        "n": 73,
+        "kappa": 14967.4
+      },
+      {
+        "m": 47,
+        "n": 37,
+        "kappa": 14717.6
+      },
+      {
+        "m": 116,
+        "n": 63,
+        "kappa": 12248.9
+      },
+      {
+        "m": 81,
+        "n": 50,
+        "kappa": 11692.5
+      }
+    ]
+  },
+  "segments": {
+    "text": "0x80000000",
+    "mbox": "0x8000F000",
+    "a": "0x80010000",
+    "b": "0x80050000",
+    "c": "0x80090000",
+    "expect": "0x800A0000",
+    "absum": "0x800C0000"
+  },
+  "mailbox": {
+    "done": "0x8000F000",
+    "status": "0x8000F004",
+    "fail_index": "0x8000F008",
+    "fail_count": "0x8000F00C",
+    "tol": "0x8000F010",
+    "trap_cause": "0x8000F018",
+    "trap_epc": "0x8000F01C",
+    "trap_tval": "0x8000F020"
+  },
+  "markers": {
+    "done": "0x600D600D",
+    "pass": "0x50415353",
+    "fail": "0x4641494C",
+    "c_preset": "0xA5A5A5A5"
+  },
+  "files": {
+    "program": [
+      "prog.S",
+      "prog.ld",
+      "prog.elf",
+      "prog.hex"
+    ],
+    "A": "a.bin (BF16, row stride in stride_bytes)",
+    "B": "b.bin (BF16, row stride in stride_bytes)",
+    "C_star": "c_exact.bin (FP64, exact sum of the products)",
+    "absum": "c_absum.bin (FP64, sum of |products|)"
+  }
+}

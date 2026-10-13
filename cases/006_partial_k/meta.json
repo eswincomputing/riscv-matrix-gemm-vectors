@@ -1,0 +1,127 @@
+{
+  "id": "006",
+  "name": "partial_k",
+  "title": "Partial K",
+  "purpose": "K = 17: the unused product lanes must contribute zero, not stale values. The row stride is padded to 18 elements for 4-byte alignment.",
+  "shape": {
+    "M": 128,
+    "N": 128,
+    "K": 17
+  },
+  "tile": {
+    "mtilem": 128,
+    "mtilen": 128,
+    "mtilek": 17,
+    "instructions": 1
+  },
+  "csr": {
+    "mtilem": "0x803",
+    "mtilen": "0x804",
+    "mtilek": "0x805"
+  },
+  "layout": "C = A * B^T; A is [M][K], B is [N][K] (not [K][N]); all row-major",
+  "dtype": {
+    "A": "bf16",
+    "B": "bf16",
+    "C": "fp32"
+  },
+  "stride_bytes": {
+    "A": 36,
+    "B": 36,
+    "C": 512
+  },
+  "data": {
+    "generator": "zero_mean",
+    "seed": "0xA3E00006"
+  },
+  "criterion": {
+    "type": "error-bound",
+    "formula": "|C_hat - C*| <= gamma(G) * sum|a*b|,  gamma(G) = G*u/(1 - G*u),  u = 2^-24",
+    "default_rounds_G": 17,
+    "default_note": "G = K holds for any FP32 accumulation; use the rounding count of your implementation for a tighter check (check.py --rounds/--group)",
+    "self_check_tol": 1.0132799879169342e-06
+  },
+  "cancellation_ratio": {
+    "median": 3.863,
+    "max": 87011.6,
+    "top": [
+      {
+        "m": 29,
+        "n": 14,
+        "kappa": 87011.6
+      },
+      {
+        "m": 84,
+        "n": 93,
+        "kappa": 21884.2
+      },
+      {
+        "m": 101,
+        "n": 66,
+        "kappa": 6181.2
+      },
+      {
+        "m": 89,
+        "n": 72,
+        "kappa": 4883.8
+      },
+      {
+        "m": 80,
+        "n": 10,
+        "kappa": 4650.8
+      },
+      {
+        "m": 49,
+        "n": 8,
+        "kappa": 4615.5
+      },
+      {
+        "m": 89,
+        "n": 102,
+        "kappa": 4583.3
+      },
+      {
+        "m": 79,
+        "n": 61,
+        "kappa": 4465.1
+      }
+    ]
+  },
+  "segments": {
+    "text": "0x80000000",
+    "mbox": "0x8000F000",
+    "a": "0x80010000",
+    "b": "0x80050000",
+    "c": "0x80090000",
+    "expect": "0x800A0000",
+    "absum": "0x800C0000"
+  },
+  "mailbox": {
+    "done": "0x8000F000",
+    "status": "0x8000F004",
+    "fail_index": "0x8000F008",
+    "fail_count": "0x8000F00C",
+    "tol": "0x8000F010",
+    "trap_cause": "0x8000F018",
+    "trap_epc": "0x8000F01C",
+    "trap_tval": "0x8000F020"
+  },
+  "markers": {
+    "done": "0x600D600D",
+    "pass": "0x50415353",
+    "fail": "0x4641494C",
+    "c_preset": "0xA5A5A5A5"
+  },
+  "files": {
+    "program": [
+      "prog.S",
+      "prog.ld",
+      "prog.elf",
+      "prog.hex"
+    ],
+    "A": "a.bin (BF16, row stride in stride_bytes)",
+    "B": "b.bin (BF16, row stride in stride_bytes)",
+    "C_star": "c_exact.bin (FP64, exact sum of the products)",
+    "absum": "c_absum.bin (FP64, sum of |products|)"
+  }
+}

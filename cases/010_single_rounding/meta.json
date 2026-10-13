@@ -1,0 +1,150 @@
+{
+  "id": "010",
+  "name": "single_rounding",
+  "title": "One rounding per output",
+  "purpose": "Each output has exactly two non-zero products, in different instructions, so exactly one addition can be inexact whatever the order. The pairs cover exact 24-bit sums, ties with even and odd neighbours, values just above and below the halfway point, far-below (sticky) bits and exact cancellation. Expected values are round-to-nearest-even; the checker names the rounding mode that matches a failing result.",
+  "shape": {
+    "M": 128,
+    "N": 128,
+    "K": 64
+  },
+  "tile": {
+    "mtilem": 128,
+    "mtilen": 128,
+    "mtilek": 32,
+    "instructions": 2
+  },
+  "csr": {
+    "mtilem": "0x803",
+    "mtilen": "0x804",
+    "mtilek": "0x805"
+  },
+  "layout": "C = A * B^T; A is [M][K], B is [N][K] (not [K][N]); all row-major",
+  "dtype": {
+    "A": "bf16",
+    "B": "bf16",
+    "C": "fp32"
+  },
+  "stride_bytes": {
+    "A": 128,
+    "B": 128,
+    "C": 512
+  },
+  "data": {
+    "generator": "special",
+    "seed": "0xA3E0000A"
+  },
+  "criterion": {
+    "type": "bit-exact",
+    "why": "two non-zero products per output: exactly one rounding in any order",
+    "rounding_mode": "round to nearest, ties to even"
+  },
+  "cancellation_ratio": {
+    "median": 1.0,
+    "max": 257.0,
+    "top": [
+      {
+        "m": 30,
+        "n": 125,
+        "kappa": 257.0
+      },
+      {
+        "m": 30,
+        "n": 111,
+        "kappa": 257.0
+      },
+      {
+        "m": 30,
+        "n": 104,
+        "kappa": 257.0
+      },
+      {
+        "m": 30,
+        "n": 97,
+        "kappa": 257.0
+      },
+      {
+        "m": 30,
+        "n": 83,
+        "kappa": 257.0
+      },
+      {
+        "m": 30,
+        "n": 76,
+        "kappa": 257.0
+      },
+      {
+        "m": 30,
+        "n": 62,
+        "kappa": 257.0
+      },
+      {
+        "m": 30,
+        "n": 41,
+        "kappa": 257.0
+      }
+    ]
+  },
+  "segments": {
+    "text": "0x80000000",
+    "mbox": "0x8000F000",
+    "a": "0x80010000",
+    "b": "0x80050000",
+    "c": "0x80090000",
+    "expect": "0x800A0000"
+  },
+  "mailbox": {
+    "done": "0x8000F000",
+    "status": "0x8000F004",
+    "fail_index": "0x8000F008",
+    "fail_count": "0x8000F00C",
+    "tol": "0x8000F010",
+    "trap_cause": "0x8000F018",
+    "trap_epc": "0x8000F01C",
+    "trap_tval": "0x8000F020"
+  },
+  "markers": {
+    "done": "0x600D600D",
+    "pass": "0x50415353",
+    "fail": "0x4641494C",
+    "c_preset": "0xA5A5A5A5"
+  },
+  "files": {
+    "program": [
+      "prog.S",
+      "prog.ld",
+      "prog.elf",
+      "prog.hex"
+    ],
+    "A": "a.bin (BF16, row stride in stride_bytes)",
+    "B": "b.bin (BF16, row stride in stride_bytes)",
+    "C_star": "c_exact.bin (FP64, exact sum of the products)",
+    "absum": "c_absum.bin (FP64, sum of |products|)",
+    "expected": "c_expect.bin (FP32 bit patterns, bit-exact criterion)"
+  },
+  "rounding_coverage": {
+    "inexact": 11359,
+    "differs_under_rtz": 5683,
+    "differs_under_rmm": 2238,
+    "differs_under_rup": 5673,
+    "differs_under_rdn": 5834,
+    "differs_with_23_bit_accumulator": 5022,
+    "exact_zero": 148,
+    "outputs_per_class": {
+      "exact_24bit+": 1280,
+      "tie+": 1280,
+      "tie_odd+": 1152,
+      "above_half+": 1152,
+      "below_half+": 1152,
+      "sticky+": 1152,
+      "equal_magnitude+": 1152,
+      "exact_24bit-": 1152,
+      "tie-": 1152,
+      "tie_odd-": 1152,
+      "above_half-": 1152,
+      "below_half-": 1152,
+      "sticky-": 1152,
+      "equal_magnitude-": 1152
+    }
+  }
+}

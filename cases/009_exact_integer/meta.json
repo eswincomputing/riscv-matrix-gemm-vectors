@@ -1,0 +1,126 @@
+{
+  "id": "009",
+  "name": "exact_integer",
+  "title": "Integer data, exact in any order",
+  "purpose": "All products are integers and sum|a*b| < 2^24, so every partial sum in any order is exactly representable in FP32. A quarter of the outputs lie in [2^23, 2^24); the odd ones among them need all 24 significant bits. The result is bit-exact for every compliant implementation; a narrower accumulator or any data-path error shows up as a bit mismatch.",
+  "shape": {
+    "M": 128,
+    "N": 128,
+    "K": 1024
+  },
+  "tile": {
+    "mtilem": 128,
+    "mtilen": 128,
+    "mtilek": 32,
+    "instructions": 32
+  },
+  "csr": {
+    "mtilem": "0x803",
+    "mtilen": "0x804",
+    "mtilek": "0x805"
+  },
+  "layout": "C = A * B^T; A is [M][K], B is [N][K] (not [K][N]); all row-major",
+  "dtype": {
+    "A": "bf16",
+    "B": "bf16",
+    "C": "fp32"
+  },
+  "stride_bytes": {
+    "A": 2048,
+    "B": 2048,
+    "C": 512
+  },
+  "data": {
+    "generator": "int",
+    "seed": "0xA3E00009"
+  },
+  "criterion": {
+    "type": "bit-exact",
+    "why": "integer data, sum|a*b| < 2^24: no rounding in any order",
+    "rounding_mode": "round to nearest, ties to even"
+  },
+  "cancellation_ratio": {
+    "median": 26.238,
+    "max": 218586.1,
+    "top": [
+      {
+        "m": 12,
+        "n": 72,
+        "kappa": 218586.1
+      },
+      {
+        "m": 0,
+        "n": 98,
+        "kappa": 94114.8
+      },
+      {
+        "m": 97,
+        "n": 25,
+        "kappa": 73241.8
+      },
+      {
+        "m": 52,
+        "n": 122,
+        "kappa": 68405.1
+      },
+      {
+        "m": 117,
+        "n": 81,
+        "kappa": 62391.0
+      },
+      {
+        "m": 83,
+        "n": 87,
+        "kappa": 58325.0
+      },
+      {
+        "m": 83,
+        "n": 80,
+        "kappa": 57835.0
+      },
+      {
+        "m": 82,
+        "n": 109,
+        "kappa": 57553.0
+      }
+    ]
+  },
+  "segments": {
+    "text": "0x80000000",
+    "mbox": "0x8000F000",
+    "a": "0x80010000",
+    "b": "0x80050000",
+    "c": "0x80090000",
+    "expect": "0x800A0000"
+  },
+  "mailbox": {
+    "done": "0x8000F000",
+    "status": "0x8000F004",
+    "fail_index": "0x8000F008",
+    "fail_count": "0x8000F00C",
+    "tol": "0x8000F010",
+    "trap_cause": "0x8000F018",
+    "trap_epc": "0x8000F01C",
+    "trap_tval": "0x8000F020"
+  },
+  "markers": {
+    "done": "0x600D600D",
+    "pass": "0x50415353",
+    "fail": "0x4641494C",
+    "c_preset": "0xA5A5A5A5"
+  },
+  "files": {
+    "program": [
+      "prog.S",
+      "prog.ld",
+      "prog.elf",
+      "prog.hex"
+    ],
+    "A": "a.bin (BF16, row stride in stride_bytes)",
+    "B": "b.bin (BF16, row stride in stride_bytes)",
+    "C_star": "c_exact.bin (FP64, exact sum of the products)",
+    "absum": "c_absum.bin (FP64, sum of |products|)",
+    "expected": "c_expect.bin (FP32 bit patterns, bit-exact criterion)"
+  },
+  "outputs_needing_24_bits": 2027
+}

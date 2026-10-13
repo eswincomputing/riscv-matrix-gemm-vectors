@@ -1,0 +1,5 @@
+# Generated files must stay byte-identical on every platform (tests/selftest.py
+# regenerates them and compares byte for byte).
+* text=auto eol=lf
+*.bin binary
+*.elf binary

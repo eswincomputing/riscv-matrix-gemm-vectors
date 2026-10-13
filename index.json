@@ -1,0 +1,115 @@
+{
+  "base": "0x80000000",
+  "cases": [
+    {
+      "id": "001",
+      "name": "full_tile",
+      "title": "Full tile",
+      "shape": {
+        "M": 128,
+        "N": 128,
+        "K": 32
+      },
+      "criterion": "error-bound"
+    },
+    {
+      "id": "002",
+      "name": "m1_gemv",
+      "title": "M = 1 (matrix-vector)",
+      "shape": {
+        "M": 1,
+        "N": 128,
+        "K": 1024
+      },
+      "criterion": "error-bound"
+    },
+    {
+      "id": "003",
+      "name": "partial_m",
+      "title": "Partial M",
+      "shape": {
+        "M": 7,
+        "N": 128,
+        "K": 32
+      },
+      "criterion": "error-bound"
+    },
+    {
+      "id": "004",
+      "name": "k_multiblock",
+      "title": "Multi-instruction accumulation",
+      "shape": {
+        "M": 128,
+        "N": 128,
+        "K": 256
+      },
+      "criterion": "error-bound"
+    },
+    {
+      "id": "005",
+      "name": "partial_n",
+      "title": "Partial N",
+      "shape": {
+        "M": 128,
+        "N": 13,
+        "K": 32
+      },
+      "criterion": "error-bound"
+    },
+    {
+      "id": "006",
+      "name": "partial_k",
+      "title": "Partial K",
+      "shape": {
+        "M": 128,
+        "N": 128,
+        "K": 17
+      },
+      "criterion": "error-bound"
+    },
+    {
+      "id": "007",
+      "name": "stride_gap",
+      "title": "Row stride larger than the row",
+      "shape": {
+        "M": 128,
+        "N": 128,
+        "K": 32
+      },
+      "criterion": "error-bound"
+    },
+    {
+      "id": "008",
+      "name": "outlier_activations",
+      "title": "Outliers and cancellation",
+      "shape": {
+        "M": 128,
+        "N": 128,
+        "K": 1024
+      },
+      "criterion": "error-bound"
+    },
+    {
+      "id": "009",
+      "name": "exact_integer",
+      "title": "Integer data, exact in any order",
+      "shape": {
+        "M": 128,
+        "N": 128,
+        "K": 1024
+      },
+      "criterion": "bit-exact"
+    },
+    {
+      "id": "010",
+      "name": "single_rounding",
+      "title": "One rounding per output",
+      "shape": {
+        "M": 128,
+        "N": 128,
+        "K": 64
+      },
+      "criterion": "bit-exact"
+    }
+  ]
+}
