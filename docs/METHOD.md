@@ -185,3 +185,8 @@ cancellation and bit-exact cases for the properties the bound cannot see.
 * RISC-V Matrix Extension Specification Proposal, version 0.6.0,
   <https://riscv.atlassian.net/wiki/spaces/AMEX/pages/893681697/Proposals> — the instructions and
   CSRs used by the test programs, and the unordered-sum semantics quoted in section 1.
+
+---
+
+Copyright 2026 Beijing ESWIN Computing Technology Co., Ltd.
+Licensed under the Apache License, Version 2.0; see [LICENSE](../LICENSE).

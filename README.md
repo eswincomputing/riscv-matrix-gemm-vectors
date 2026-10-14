@@ -243,4 +243,6 @@ docs/METHOD.md      reference, criterion and test data in detail
 
 ## License
 
-Apache License 2.0, see [LICENSE](LICENSE).
+Copyright 2026 Beijing ESWIN Computing Technology Co., Ltd.
+
+Licensed under the Apache License, Version 2.0; see [LICENSE](LICENSE) and [NOTICE](NOTICE).

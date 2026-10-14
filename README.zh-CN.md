@@ -197,4 +197,6 @@ docs/METHOD.md      参考值、判据和测试数据的详细说明（英文）
 
 ## 许可证
 
-Apache License 2.0，见 [LICENSE](LICENSE)。
+Copyright 2026 Beijing ESWIN Computing Technology Co., Ltd.
+
+本项目以 Apache License 2.0 授权，见 [LICENSE](LICENSE) 和 [NOTICE](NOTICE)。
